@@ -79,12 +79,16 @@ jobs:
         name: Install cross tools
         run: sudo apt-get install gcc-multilib g++-multilib
 
+      - name: Build rmdir exe
+        run: rustc rmdir.rs --out-dir ${{ runner.temp }}
+
       - if: ${{ matrix.target == '' && matrix.c-compiler == '' }}
         name: Build / test
         run: |
           rustc --version
           cargo build --verbose
           cargo test -- --nocapture
+          ${{ runner.temp }}/rmdir target
           cargo clean
       - if: ${{ matrix.target == '' && matrix.c-compiler != '' }}
         name: Build / test with alt compiler
@@ -97,6 +101,7 @@ jobs:
           rustc --version
           cargo build --verbose
           cargo test -- --nocapture
+          ${{ runner.temp }}/rmdir target
           cargo clean
       - if: matrix.target != ''
         name: Build / test 32-bit
@@ -104,6 +109,7 @@ jobs:
           rustc --version
           cargo build --verbose --target=${{matrix.target}}
           cargo test --target=${{matrix.target}} -- --nocapture
+          ${{ runner.temp }}/rmdir target
           cargo clean
 
   fmt:

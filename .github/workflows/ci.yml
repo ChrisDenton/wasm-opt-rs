@@ -112,6 +112,15 @@ jobs:
           ${{ runner.temp }}/rmdir target
           cargo clean
 
+  conformance-tests:
+    name: Conformance Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Checkout submodule
+        run: git submodule update --init --recursive
+      - run: cargo test --manifest-path components/conformance-tests/Cargo.toml 
+
   fmt:
     name: Cargo fmt
     runs-on: ubuntu-latest
